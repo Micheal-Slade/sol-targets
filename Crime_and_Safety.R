@@ -1,16 +1,21 @@
 library(tidyverse)
 
 #Figure 1 - Total Crime Offences 
-total_crime_offences <- TNO_data |>
+TNO <- TNO_data |>
   filter(!grepl("Outcomes", Measure)) |>
   filter(grepl("Borough", `Area Type`)) |>
   group_by(Month_Year) |>
+  arrange(Month_Year) |>
   summarise(count = sum(Count)) 
 
 #Figure 2 - Non Domestic Violences with Injury Offences
-#Not sure where this data is
-#Non_Domestic_Violence
-  
+#Not completely sure if this data is correct - very different from the previous report but matches almost perfectly with the met 
+ND_Violence <- TNO_data |>
+  filter(`Offence Subgroup` %in% "Violence with Injury") |>
+  filter(!grepl("Outcomes", Measure)) |>
+  filter(grepl("Borough", `Area Type`)) |>
+  group_by(Month_Year) |>
+  summarise(count = sum(Count))
 
 #Figure 3 - Domestic Abuse Offences 
 Domestic_Abuse <- Other_data |>
@@ -21,14 +26,12 @@ Domestic_Abuse <- Other_data |>
   group_by(Month_Year) |>
   summarise(count = sum(Count))
   
-
 # Figure 4 - Sexual Offences
 # Step 1 - Filter out only the variables "Other Sexual Offences" & "Rape" from "Offence Subgroup" and only show Offences
 Sexual_Offences <- TNO_data |>
   filter(`Offence Subgroup` %in% c("Rape", "Other Sexual Offences")) |>
   filter(!grepl("Outcomes", Measure)) |>
   filter(grepl("Borough", `Area Type`))
-
 
 # Pivot the filtered variables to their own columns and summarize from Count
 Sexual_Offences <- Sexual_Offences |>
@@ -92,6 +95,20 @@ Burglary_Offences <- TNO_data |>
    filter(grepl("Theft from Person",`Offence Subgroup`)) |>
    group_by(Month_Year) |>
    summarise(count = sum(Count))
+ 
+ #Figure 11 - Fraud and Cyber Crime
+ #DATA LOCATION UNKNOWN
+ 
+ #Figure 12 - Anti Social Behaviour
+ 
+ #Figure 13 - Harassment
+ 
+ #Figure 14 - Feeling Safe After Dark
+ 
+ #Figure 15 - Satisfaction Level of Reporting Victims (MPS)
+ 
+ #Figure 16 - Fair Treatment by the Metropolitan Police Service
+ 
  
  
  
