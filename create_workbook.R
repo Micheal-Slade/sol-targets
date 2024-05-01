@@ -120,6 +120,17 @@ Theft_Person_Meta <- data.frame(
 
 writeData(wb, "Theft_Person", Theft_Person_Meta, startCol = ncol(Theft_Person)+4,startRow = 2)
 
+#Bonus - Hate Crime
+addWorksheet(wb, "Hate_Crime")
+writeData(wb,"Hate_Crime", Hate_Crime)
+
+Hate_Crime_Meta <- data.frame(
+  metal = c("Title", "Subtitle"),
+  value = c("Hate Crime Offences", "Number of hate crime offences in London as recorded by the MPS")
+)
+
+writeData(wb, "Hate_Crime", Hate_Crime_Meta,startCol = ncol(Hate_Crime)+4,startRow = 2)
+
 #Save the completed workbook to my working directory
 saveWorkbook(wb, "State_Of_London_Crime.xlsx", overwrite = TRUE)
 

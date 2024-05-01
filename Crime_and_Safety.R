@@ -109,6 +109,13 @@ Burglary_Offences <- TNO_data |>
  
  #Figure 16 - Fair Treatment by the Metropolitan Police Service
  
- 
+ #Bonus Figure - Hate Crime
+ #Offences where the Crime Subtype are flagged as Hate Crime - note, the wider Crime Type of Hate crime encompasses all
+ Hate_Crime <- Other_data |>
+   filter(`Crime Subtype` %in% "Hate Crime") |>
+   filter(grepl("Borough", `Area Type`)) |>
+   filter(grepl("Offences", Measure)) |>
+   group_by(Month_Year) |>
+   summarise(count = sum(Count))
  
  
