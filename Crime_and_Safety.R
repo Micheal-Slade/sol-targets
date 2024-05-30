@@ -1,21 +1,45 @@
 library(tidyverse)
+library(lubridate)
+library(dplyr)
+
 
 #Figure 1 - Total Crime Offences 
 TNO <- TNO_data |>
   filter(!grepl("Outcomes", Measure)) |>
   filter(grepl("Borough", `Area Type`)) |>
-  group_by(Month_Year) |>
-  arrange(Month_Year) |>
+  group_by(`Parsed_Dates`) |>
+  arrange(Month_Year) |> 
   summarise(count = sum(Count)) 
 
 #Figure 2 - Non Domestic Violences with Injury Offences
-#Not completely sure if this data is correct - very different from the previous report but matches almost perfectly with the met 
-ND_Violence <- TNO_data |>
+ND_Violence_TNO <- TNO_data |>
   filter(`Offence Subgroup` %in% "Violence with Injury") |>
   filter(!grepl("Outcomes", Measure)) |>
   filter(grepl("Borough", `Area Type`)) |>
   group_by(Month_Year) |>
   summarise(count = sum(Count))
+
+Dom_Violence_Other <- Other_data |>
+  filter(`Crime Subtype` %in% "Domestic Abuse Violence with Injury") |>
+  filter(!grepl("Outcomes", Measure)) |>
+  filter(grepl("Borough", `Area Type`)) |>
+  group_by(Month_Year) |>
+  summarise(count = sum(Count))
+
+#Merge the two tables together
+ND_Violence <- merge(ND_Violence_TNO, Dom_Violence_Other, by = "Month_Year", all = TRUE)
+
+#Replace any NA values with 0
+ND_Violence[is.na(ND_Violence)] <- 0
+
+#Create the Count by the count of Violence with Injury minus the Domestic Violence Count
+ND_Violence$Count <- (ND_Violence$count.x-ND_Violence$count.y)
+
+ND_Violence <- ND_Violence |>
+  select(`Month_Year`, `Count`)
+ 
+#Drop excess tables
+rm(Dom_Violence_Other, ND_Violence_TNO)
 
 #Figure 3 - Domestic Abuse Offences 
 Domestic_Abuse <- Other_data |>
